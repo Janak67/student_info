@@ -31,7 +31,7 @@ class _EditScreenState extends State<EditScreen> {
           child: Padding(
             padding: const EdgeInsets.all(10),
             child: Expanded(
-              child: ListView(
+              child: Column(
                 children: [
                   TextField(
                     controller: txtGrid,
