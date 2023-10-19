@@ -144,7 +144,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ElevatedButton(
               onPressed: () {
                 setState(() {
-                  Global.g1.stdlist[index] = StudentModel (name: txtName.text,std: txtStd.text,id: int.tryParse(txtGrid.text));
+                  Global.g1.stdlist[index] = StudentModel(
+                      name: txtName.text,
+                      std: txtStd.text,
+                      id: int.tryParse(txtGrid.text));
                 });
                 Navigator.pop(context);
               },
