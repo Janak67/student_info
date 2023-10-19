@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../model/student_model.dart';
 import '../utils/global.dart';
 
 class EditScreen extends StatefulWidget {
@@ -67,12 +68,11 @@ class _EditScreenState extends State<EditScreen> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      Map m1 = {
-                        "Grid": txtGrid.text,
-                        "Name": txtName.text,
-                        "Std": txtStd.text
-                      };
-                      Global.g1.stdlist.add(m1);
+                      StudentModel details = StudentModel(
+                          id: int.tryParse(txtGrid.text),
+                          name: txtName.text,
+                          std: txtStd.text);
+                      Global.g1.stdlist.add(details);
                       Navigator.pop(
                           context, [txtGrid.text, txtName.text, txtStd.text]);
                     },

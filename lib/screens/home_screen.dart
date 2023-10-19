@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:student_info/utils/global.dart';
 
+import '../model/student_model.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -9,6 +11,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  TextEditingController txtGrid = TextEditingController();
+  TextEditingController txtName = TextEditingController();
+  TextEditingController txtStd = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -24,9 +30,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: ListView.builder(
           itemBuilder: (context, index) {
+            StudentModel student = Global.g1.stdlist[index];
             return Container(
               margin: const EdgeInsets.all(10),
-              height: MediaQuery.of(context).size.height * 0.2,
+              height: MediaQuery.of(context).size.height * 0.22,
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
                   color: Colors.blueGrey.shade200,
@@ -37,18 +44,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "GRID : ${Global.g1.stdlist[index]['Grid']}",
+                      "GRID : ${student.id}",
                       style: const TextStyle(fontSize: 20, color: Colors.black),
                     ),
                     Text(
-                      "Name : ${Global.g1.stdlist[index]['Name']}",
+                      "Name : ${student.name}",
                       style: const TextStyle(
                           fontSize: 25,
                           color: Colors.black,
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "Std : ${Global.g1.stdlist[index]['Std']}",
+                      "Std : ${student.std}",
                       style: const TextStyle(fontSize: 25, color: Colors.black),
                     ),
                     Row(
@@ -57,27 +64,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         IconButton(
                           onPressed: () {
-                            setState(() {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: const TextField(
-                                      decoration: InputDecoration(
-                                          border: OutlineInputBorder()),
-                                    ),
-                                    actions: [
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: const Text("OK"),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            });
+                            StudentModel s1 = Global.g1.stdlist[index];
+                            txtName.text = s1.name!;
+                            txtGrid.text = s1.id.toString();
+                            txtStd.text = s1.std!;
+                            updateDialog(index);
                           },
                           icon: const Icon(
                             Icons.edit,
@@ -87,8 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         IconButton(
                           onPressed: () {
                             setState(() {
-                              Global.g1.stdlist
-                                  .remove(Global.g1.stdlist[index]);
+                              Global.g1.stdlist.removeAt(index);
                             });
                           },
                           icon: const Icon(
@@ -117,6 +107,52 @@ class _HomeScreenState extends State<HomeScreen> {
               size: 25,
             )),
       ),
+    );
+  }
+
+  Future<dynamic> updateDialog(int index) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: TextField(
+                controller: txtGrid,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(), hintText: "GRID"),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: TextField(
+                controller: txtName,
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(), hintText: "Name"),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: TextField(
+                controller: txtStd,
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(), hintText: "Std"),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  Global.g1.stdlist[index] = StudentModel (name: txtName.text,std: txtStd.text,id: int.tryParse(txtGrid.text));
+                });
+                Navigator.pop(context);
+              },
+              child: const Text("OK"),
+            ),
+          ],
+        );
+      },
     );
   }
 }
